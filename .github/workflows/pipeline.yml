@@ -1,0 +1,68 @@
+name: Python CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  # --- JOB 1: BUILD & TEST (Python) ---
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      # A. Check out the repository code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # B. Set up Python Environment
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' # Change to 3.8, 3.9, or 3.11 if needed
+          cache: 'pip'           # Caches dependencies to speed up runs
+
+      # C. Install Dependencies
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest
+          # Only install requirements if the file exists
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      # D. Lint with Flake8
+      # This checks for syntax errors or undefined names.
+      - name: Lint with Flake8
+        run: |
+          # Stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings (pipeline won't fail on style issues)
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      # E. Run Tests
+      # We use pytest. If you use 'unittest', change this command.
+      - name: Run Tests
+        run: pytest
+
+  # --- JOB 2: DEPLOY (Simulation) ---
+  deploy:
+    name: Deploy Application
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Deploy
+        env:
+          API_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+        run: |
+          echo "Build passed. Starting Python deployment..."
+          # Example for Docker deployment:
+          # docker build -t my-app .
+          # docker push my-app
+          echo "Deployment complete."
