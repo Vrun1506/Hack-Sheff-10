@@ -1,3 +1,4 @@
+import requests
 import os
 import logging
 from slack_bolt import App
@@ -24,17 +25,15 @@ def query_llm_agent(conversation_history):
     The LLM decides whether to reply or stay silent (async group member behavior).
     """
     system_prompt = """
-    You are 'DevBot', a helpful, cynical, but brilliant senior developer in a group chat.
+    You are a helpful assistant managed by a Viral LinkedIn Bot.
     
     YOUR GOAL:
     - Read the conversation transcript.
-    - If the users are asking for help, discussing code, or if you have a brilliant suggestion, REPLY.
-    - If the conversation is casual noise or not relevant to you, DO NOT REPLY.
-    - If you reply, keep it short (1-2 sentences) and chatty. Do not be formal.
+    - If the user asks for a summary or to "write a post", generate a clear, detailed summary of the conversation context.
+    - If the user is just chatting normally, output exactly: NO_RESPONSE
     
     OUTPUT FORMAT:
-    - If you want to stay silent, output exactly: NO_RESPONSE
-    - If you want to speak, just output your message.
+    - Just the summary text. No "Here is the summary:" prefixes.
     """
 
     try:
@@ -98,10 +97,25 @@ def handle_message_events(body, logger):
 
     # C. Speak (if the brain had something to say)
     if response:
-        app.client.chat_postMessage(
-            channel=channel_id,
-            text=response
-        )
+        # --- N8N INTEGRATION START ---
+        # TODO: Replace with your actual n8n webhook URL
+        n8n_webhook_url = "https://ermai.app.n8n.cloud/webhook-test/generate-post" 
+        
+        payload = {
+            "summary": response,      # The AI's output
+            "user_id": user_id,       # The organic User ID who triggered it
+            "original_text": text     # The raw message
+        }
+        
+        try:
+            requests.post("https://ermai.app.n8n.cloud/webhook-test/generate-post", json=payload)
+            logger.info(f"Sent to n8n for user {user_id}")
+            
+            # Optional: Let the user know the bot is working on it
+            # app.client.chat_postMessage(channel=channel_id, text="Thinking about a post for this... check your DMs! 🧠")
+            
+        except Exception as e:
+            logger.error(f"Failed to send to n8n: {e}")
 
 # Startup: Get Bot ID to ignore self
 @app.event("app_mention")

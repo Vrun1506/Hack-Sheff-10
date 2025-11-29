@@ -1,0 +1,237 @@
+[00:00:02.287] Server  LOG      ✓ Ready in 1743ms
+[00:00:58.655] Server  LOG      ○ Compiling / ...
+[00:00:59.807] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:00.003] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="/landing-p...">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <RootLayout>
+                        <html
+                          lang="en"
+-                         data-jetski-tab-id="1481373803"
+                        >
+                          <body
++                           className="geist_a71539c9-module__T19VSG__variable geist_mono_8d43a2aa-module__8Li5zG__var..."
+-                           className="geist_a71539c9-module__T19VSG__variable geist_mono_8d43a2aa-module__8Li5zG__var..."
+                          >
+                  ...
+
+[00:02:12.054] Server  LOG      ✓ Compiled in 41ms
+[00:02:12.162] Browser ERROR   ./landing-page/src/components/Navbar.tsx:19:7
+Parsing ecmascript source code failed
+  17 |       </div>
+  18 |
+> 19 |       <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
+     |       ^
+  20 |         <Link href="#" className="hover:text-foreground transition-colors">Product</Link>
+  21 |         <Link href="#" className="hover:text-foreground transition-colors">Solutions</Link>
+  22 |         <Link href="#" className="hover:text-foreground transition-colors">Resources</Link>
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./landing-page/src/components/Navbar.tsx
+    ./landing-page/src/app/page.tsx
+[00:02:13.395] Browser ERROR   ./landing-page/src/components/Navbar.tsx:19:7
+Parsing ecmascript source code failed
+  17 |       </div>
+  18 |
+> 19 |       <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
+     |       ^
+  20 |         <Link href="#" className="hover:text-foreground transition-colors">Product</Link>
+  21 |         <Link href="#" className="hover:text-foreground transition-colors">Solutions</Link>
+  22 |         <Link href="#" className="hover:text-foreground transition-colors">Resources</Link>
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./landing-page/src/components/Navbar.tsx
+    ./landing-page/src/app/page.tsx
+[00:02:24.811] Server  LOG      ✓ Compiled in 28ms
+[00:02:34.041] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:02:34.244] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="/landing-p...">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <RootLayout>
+                        <html
+                          lang="en"
+-                         data-jetski-tab-id="1481373803"
+                        >
+                  ...
+
+[00:49:17.556] Server  ERROR   C:\Users\alric\Hack-Sheff-10\landing-page\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:49:17.562] Server  ERROR    ⨯ Error: Event handlers cannot be passed to Client Component props.
+  <form onSubmit={function onSubmit} className=... children=...>
+                 ^^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+[00:49:17.819] Browser ERROR   uncaughtError: Error: Event handlers cannot be passed to Client Component props.
+  <form onSubmit={function onSubmit} className=... children=...>
+                 ^^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+[00:49:18.974] Server  WARN     ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:49:19.018] Server  ERROR   C:\Users\alric\Hack-Sheff-10\landing-page\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:49:19.019] Server  ERROR    ⨯ Error: Event handlers cannot be passed to Client Component props.
+  <form onSubmit={function onSubmit} className=... children=...>
+                 ^^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+[00:49:19.119] Server  LOG      ✓ Compiled in 57ms
+[00:49:19.574] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:49:19.887] Browser ERROR   uncaughtError: Error: Event handlers cannot be passed to Client Component props.
+  <form onSubmit={function onSubmit} className=... children=...>
+                 ^^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+[00:49:27.060] Server  ERROR   C:\Users\alric\Hack-Sheff-10\landing-page\.next\dev\server\chunks\ssr\[root-of-the-server]__b8dd2ff8._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:49:27.061] Server  ERROR    ⨯ ReferenceError: ChatWidget is not defined
+[00:49:27.318] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:49:27.319] Browser ERROR   uncaughtError: ReferenceError: ChatWidget is not defined
+[00:49:28.540] Server  ERROR   C:\Users\alric\Hack-Sheff-10\landing-page\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:49:28.541] Server  ERROR    ⨯ Error: Event handlers cannot be passed to Client Component props.
+  <form onSubmit={function onSubmit} className=... children=...>
+                 ^^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+[00:49:28.900] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:49:29.139] Browser ERROR   uncaughtError: Error: Event handlers cannot be passed to Client Component props.
+  <form onSubmit={function onSubmit} className=... children=...>
+                 ^^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+[00:49:38.727] Server  ERROR   C:\Users\alric\Hack-Sheff-10\landing-page\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:49:38.728] Server  ERROR    ⨯ Error: Event handlers cannot be passed to Client Component props.
+  <form onSubmit={function onSubmit} className=... children=...>
+                 ^^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+[00:49:39.277] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:49:39.654] Browser ERROR   uncaughtError: Error: Event handlers cannot be passed to Client Component props.
+  <form onSubmit={function onSubmit} className=... children=...>
+                 ^^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+[00:49:54.712] Server  ERROR   C:\Users\alric\Hack-Sheff-10\landing-page\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:49:54.714] Server  ERROR    ⨯ Error: Event handlers cannot be passed to Client Component props.
+  <form onSubmit={function onSubmit} className=... children=...>
+                 ^^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+[00:49:54.962] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:49:55.195] Browser ERROR   uncaughtError: Error: Event handlers cannot be passed to Client Component props.
+  <form onSubmit={function onSubmit} className=... children=...>
+                 ^^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+[00:50:15.283] Server  LOG      ✓ Compiled in 231ms
+[00:50:15.343] Server  WARN     ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:50:15.554] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:50:15.586] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:50:15.767] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="/landing-p...">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <RootLayout>
+                        <html
+                          lang="en"
+-                         data-jetski-tab-id="1481373805"
+                        >
+                  ...
+
+[00:50:15.813] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="/landing-p...">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <RootLayout>
+                        <html
+                          lang="en"
+-                         data-jetski-tab-id="1481373803"
+                        >
+                  ...
+
