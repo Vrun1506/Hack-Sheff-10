@@ -14,7 +14,7 @@ export default function Hero() {
                     className="text-5xl md:text-7xl font-bold tracking-tight mb-8 leading-[1.1]"
                 >
                     Speak Simply, <br />
-                    <span className="text-primary">Deliver Professional</span>
+                    <span className="text-primary">Deliver Professionally</span>
                 </motion.h1>
 
                 <motion.p
