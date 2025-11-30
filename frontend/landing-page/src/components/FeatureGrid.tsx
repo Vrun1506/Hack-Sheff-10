@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { BookOpenCheck, BotMessageSquare, Users, Shield, MessagesSquare, Dumbbell } from 'lucide-react';
+import { BookOpenCheck, BotMessageSquare, Users, BrickWallFire, MessagesSquare, Dumbbell } from 'lucide-react';
 
 const features = [
     {
@@ -19,16 +19,16 @@ const features = [
         bg: "bg-blue-50"
     },
     {
-        title: "Real-Time Conversation Enhancement",
-        description: "The AI assists live while you chat or draft.",
+        title: "Business Agent",
+        description: "",
         icon: BotMessageSquare,
         colSpan: "md:col-span-1",
         bg: "bg-red-50"
     },
     {
-        title: "Secure & Privacy-Focused",
-        description: "Your data stays private and is never stored or shared.",
-        icon: Shield,
+        title: "LinkedIn Virality",
+        description: "Craft posts optimized for viral potential and visibility on LinkedIn.",
+        icon: BrickWallFire,
         colSpan: "md:col-span-2",
         bg: "bg-purple-50"
     },

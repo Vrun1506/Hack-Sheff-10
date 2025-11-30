@@ -33,12 +33,12 @@ export default function Hero() {
                     className="flex flex-col sm:flex-row items-center justify-center gap-4"
                 >
                     <a
-                        href="https://join.slack.com/your-invite-link" // TODO: replace with your workspace/channel link, and possibly change text on button
+                        href="https://join.slack.com/t/ermai/shared_invite/zt-3k7aqy4e8-RGFaCdzecO9AfsrrhYAYPQ" // TODO: replace with your workspace/channel link, and possibly change text on button
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-full font-semibold text-lg hover:bg-orange-600 transition-all flex items-center justify-center gap-2"
                     > 
-                        Start the slack bot
+                        Try the slack bot
                     </a> 
                 </motion.div>
 

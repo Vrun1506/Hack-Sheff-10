@@ -1,6 +1,5 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import AgentDetails from "@/components/AgentDetails";
 import FeatureGrid from "@/components/FeatureGrid";
 import Visulisation from "@/components/Visulisation";
 import Link from "next/link";
@@ -10,7 +9,6 @@ export default function Home() {
     <main className="min-h-screen bg-background">
       <Navbar />
       <Hero />
-      <AgentDetails />
       <FeatureGrid />
        <Visulisation />
       <section id="example" className="py-24 bg-primary text-white text-center px-6">
@@ -34,7 +32,7 @@ export default function Home() {
        <footer className="bg-white">
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-100 text-sm text-gray-500">
-                        <p>© 2025 erm.ai Inc. All rights reserved.</p>
+                        <p>© 2025 erm.ai Inc. All rights reserved. (not actually tho)</p>
                         <div className="flex gap-6 mt-4 md:mt-0">
                             <Link
                                 href="https://github.com/Vrun1506/Hack-Sheff-10"

@@ -41,7 +41,6 @@ export default function Navbar() {
 
       <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
         <a href="#start-slack" onClick={(e) => scrollTo('start-slack', e)} className="hover:text-foreground transition-colors">Start a Slack</a>
-        <a href="#our-agents" onClick={(e) => scrollTo('our-agents', e)} className="hover:text-foreground transition-colors">Our Agents</a>
         <a href="#features" onClick={(e) => scrollTo('features', e)} className="hover:text-foreground transition-colors">Features</a>
         <a href="#visulisation" onClick={(e) => scrollTo('visulisation', e)} className="hover:text-foreground transition-colors">Visulisation</a>
         <a href="#example" onClick={(e) => scrollTo('example', e)} className="hover:text-foreground transition-colors">How does it look?</a>
