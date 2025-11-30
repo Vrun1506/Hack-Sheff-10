@@ -174,58 +174,179 @@ def handle_message_events(body, say, logger):
     if f"<@{BOT_ID}>" not in text:
         return 
 
-    # --- [DEBUG STAGE 1] ---
-    logging.info("========================================")
-    logging.info(f"[DEBUG STAGE 1] Accepted User Message: '{text}'")
-    logging.info(f"[DEBUG STAGE 1] From User ID: {user_id}")
-    logging.info("========================================")
-    
-    process_start = time.perf_counter()
-    request_timestamp = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+    # Clean text
+    cleaned_text = text.replace(f"<@{BOT_ID}>", "").strip()
 
-    # 1. Acknowledge receipt
-    say(f"On it! analyzing the last {CONTEXT_LIMIT} messages for you... 🧠")
-
-    # 2. Fetch Context
-    logging.info(f"[DEBUG STAGE 2] Fetching conversation history for channel {channel_id}...")
-    transcript = get_chat_context(channel_id)
-
-    # 3. Ask the Brain
-    response = query_llm_agent(transcript + "\n[SYSTEM: THE USER HAS EXPLICITLY REQUESTED A POST. GENERATE IT NOW.]")
-
-    # 4. Speak / Trigger Webhook
-    if response:
-        # --- NEW STEP: PRINT TO SLACK FIRST ---
-        say(f"📝 *Here is the generated content:*\n\n{response}")
+    # --- BRANCH: SUMMARIZE vs ORCHESTRATE ---
+    if "summarize" in cleaned_text.lower():
+        # --- EXISTING SUMMARIZATION LOGIC ---
+        logging.info("========================================")
+        logging.info(f"[DEBUG STAGE 1] Accepted User Message: '{text}'")
+        logging.info(f"[DEBUG STAGE 1] From User ID: {user_id}")
+        logging.info("========================================")
         
-        n8n_webhook_url = "https://ermai.app.n8n.cloud/webhook-test/generate-post" 
-        
-        payload = {
-            "summary": response,      
-            "user_id": user_id,       
-            "original_text": text     
-        }
-        
-        # --- [DEBUG STAGE 5] ---
-        logging.info("[DEBUG STAGE 5] Preparing to send payload to N8N:")
-        logging.info(json.dumps(payload, indent=2)) 
+        process_start = time.perf_counter()
+        request_timestamp = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+
+        # 1. Acknowledge receipt
+        say(f"On it! analyzing the last {CONTEXT_LIMIT} messages for you... 🧠")
+
+        # 2. Fetch Context
+        logging.info(f"[DEBUG STAGE 2] Fetching conversation history for channel {channel_id}...")
+        transcript = get_chat_context(channel_id)
+
+        # 3. Ask the Brain
+        response = query_llm_agent(transcript + "\n[SYSTEM: THE USER HAS EXPLICITLY REQUESTED A POST. GENERATE IT NOW.]")
+
+        # 4. Speak / Trigger Webhook
+        if response:
+            # --- NEW STEP: PRINT TO SLACK FIRST ---
+            say(f"📝 *Here is the generated content:*\n\n{response}")
+            
+            n8n_webhook_url = "https://ermai.app.n8n.cloud/webhook/generate-post" 
+            
+            payload = {
+                "summary": response,      
+                "user_id": user_id,       
+                "original_text": text     
+            }
+            
+            # --- [DEBUG STAGE 5] ---
+            logging.info("[DEBUG STAGE 5] Preparing to send payload to N8N:")
+            logging.info(json.dumps(payload, indent=2)) 
+            
+            try:
+                requests.post(n8n_webhook_url, json=payload)
+                logging.info(f"✅ [DEBUG STAGE 6] Successfully sent to n8n.")
+                say("✅ (Also sent to n8n for further processing)")
+                
+            except Exception as e:
+                logging.error(f"Failed to send to n8n: {e}")
+                say(f"❌ I showed you the content, but failed to send it to n8n. Error: {e}")
+        else:
+            say("I couldn't generate a response based on this context. Try chatting a bit more first!")
+
+        # 5. Log Full Process Latency
+        process_end = time.perf_counter()
+        total_latency = process_end - process_start
+        latency_data = create_latency_payload([("Full_Process", total_latency)], request_timestamp)
+        push_to_grafana(latency_data, LOKI_URL, USER_ID, API_TOKEN, labels={'app': 'slack-bot-full-process'})
+
+    else:
+        # --- NEW ORCHESTRATOR LOGIC ---
+        logging.info(f"Orchestrator triggered for: {cleaned_text}")
+        status_msg = say(f"🧠 *Orchestrator:* Analyzing request...")
         
         try:
-            requests.post(n8n_webhook_url, json=payload)
-            logging.info(f"✅ [DEBUG STAGE 6] Successfully sent to n8n.")
-            say("✅ (Also sent to n8n for further processing)")
-            
-        except Exception as e:
-            logging.error(f"Failed to send to n8n: {e}")
-            say(f"❌ I showed you the content, but failed to send it to n8n. Error: {e}")
-    else:
-        say("I couldn't generate a response based on this context. Try chatting a bit more first!")
+            # Call Router
+            router_json = get_llm_response(ROUTER_SYSTEM_PROMPT, cleaned_text, json_mode=True)
+            routing_data = json.loads(router_json)
+            decision = routing_data.get("decision", "TECH")
+            reasoning = routing_data.get("reasoning", "")
 
-    # 5. Log Full Process Latency
-    process_end = time.perf_counter()
-    total_latency = process_end - process_start
-    latency_data = create_latency_payload([("Full_Process", total_latency)], request_timestamp)
-    push_to_grafana(latency_data, LOKI_URL, USER_ID, API_TOKEN, labels={'app': 'slack-bot-full-process'})
+            # Update Status
+            app.client.chat_update(
+                channel=channel_id,
+                ts=status_msg["ts"],
+                text=f"🧠 *Orchestrator:* Routing to *{decision}* Agent.\n_Reasoning: {reasoning}_"
+            )
+
+            final_response = ""
+
+            if decision == "TECH":
+                say(f"🛠️ *Tech Agent* is working...", thread_ts=status_msg["ts"])
+                final_response = get_llm_response(TECH_SYSTEM_PROMPT, cleaned_text)
+
+            elif decision == "BUSINESS":
+                say(f"💼 *Business Agent* is working...", thread_ts=status_msg["ts"])
+                final_response = get_llm_response(BUSINESS_SYSTEM_PROMPT, cleaned_text)
+
+            elif decision == "BOTH":
+                say(f"🔄 *Collaborating* (Tech ⇄ Business)...", thread_ts=status_msg["ts"])
+                
+                # Step A: Tech
+                tech_res = get_llm_response(TECH_SYSTEM_PROMPT, cleaned_text)
+                
+                # Step B: Business (Critique)
+                biz_context = f"User Query: {cleaned_text}\n\nTech Proposal: {tech_res}\n\nTask: Analyze cost/ROI."
+                biz_res = get_llm_response(BUSINESS_SYSTEM_PROMPT, biz_context)
+
+                # Step C: Synthesize
+                syn_context = f"Query: {cleaned_text}\n\nTech: {tech_res}\n\nBusiness: {biz_res}"
+                final_response = get_llm_response(SYNTHESIZER_SYSTEM_PROMPT, syn_context)
+
+            # Final Reply
+            say(f"*Final Response:*\n\n{final_response}")
+
+        except Exception as e:
+            logger.error(f"Orchestrator Error: {e}")
+            say(f"❌ Something went wrong with the agents: {e}")
+
+
+# --- ORCHESTRATOR PROMPTS ---
+ROUTER_SYSTEM_PROMPT = """
+You are the Principal Orchestrator for a multi-agent system.
+Your goal is to route user requests to the correct specialized agent.
+
+AGENTS AVAILABLE:
+1. Tech Agent: Senior Staff Engineer. Handles system design, architecture, code patterns.
+2. Business Agent: Financial Planner. Handles budgeting, costs, ROI, strategy.
+
+INSTRUCTIONS:
+- Analyze the user's input.
+- Decide if it requires the "TECH" agent, the "BUSINESS" agent, or "BOTH".
+- "BOTH" is used when a request involves technical implementation AND cost/business implications.
+
+OUTPUT FORMAT (JSON ONLY):
+{
+  "decision": "TECH" | "BUSINESS" | "BOTH",
+  "reasoning": "Brief explanation"
+}
+"""
+
+TECH_SYSTEM_PROMPT = """
+You are an AI agent acting as a Senior Staff Software Engineer specializing in system design 
+and technical architecture. 
+Your Core Responsibilities:
+- High-level system design (APIs, data flow, services, scalability).
+- Architectural decision-making (Monolith vs Microservices, SQL vs NoSQL).
+- Engineering best practices (Observability, Testing strategies).
+"""
+
+BUSINESS_SYSTEM_PROMPT = """
+You are an AI agent acting as a Corporate Financial Planner and Business Strategist.
+Your Core Responsibilities:
+- Analyze costs (Cloud spend, headcount, licensing).
+- Evaluate ROI (Return on Investment) and TCO (Total Cost of Ownership).
+- Assess business risks and strategic alignment.
+"""
+
+SYNTHESIZER_SYSTEM_PROMPT = """
+You are the Final Synthesizer.
+You have received inputs from two specialized agents (Tech and Business).
+Combine their insights into a single, cohesive, professional Slack response.
+Use Slack formatting (bolding, bullet points) to make it readable.
+"""
+
+def get_llm_response(system_prompt, user_input, model="gpt-4o", json_mode=False):
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_input}
+    ]
+    kwargs = {
+        "model": model,
+        "messages": messages,
+        "temperature": 0.5
+    }
+    if json_mode:
+        kwargs["response_format"] = {"type": "json_object"}
+
+    try:
+        response = client.chat.completions.create(**kwargs)
+        return response.choices[0].message.content
+    except Exception as e:
+        logging.error(f"LLM Error: {e}")
+        return "Error contacting the AI brain."
 
 
 # Startup
