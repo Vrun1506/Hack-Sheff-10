@@ -17,7 +17,7 @@ export default function Home() {
           <p className="text-xl mb-10 opacity-90">Achieve professional clarity, powered by many minds.</p>
           {/* Placeholder example output button */}
           <a
-            href="#example-output" // TODO: replace with real example output link
+            href="https://youtu.be/owogrzfarmU" // TODO: replace with real example output link
             className="inline-block px-6 py-3 bg-white text-primary rounded-full font-semibold text-lg hover:opacity-90 transition-all mb-6"
           >
             View example output
